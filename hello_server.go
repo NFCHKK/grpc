@@ -4,14 +4,13 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	. "github.com/NFCHKK/grpc/proto"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"log"
 	"net"
 	"net/http"
-
-	. "github.com/NFCHKK/grpc/proto"
-	"google.golang.org/grpc"
 )
 
 var (
@@ -67,4 +66,8 @@ func main() {
 	if err := run(); err != nil {
 		log.Fatalf("failed to start gate server: %v", err)
 	}
+}
+
+func initAll() error {
+
 }
