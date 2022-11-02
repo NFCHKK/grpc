@@ -6,3 +6,9 @@ http:
     - selector: http_grpc.HelloService.SayHello
       post: /helloservice/sayhello
       body: "*"
+    - selector: http_grpc.HelloService.SaveNotes
+      post: /helloservice/savenotes
+      body: "*"
+    - selector: http_grpc.HelloService.GetNotes
+      post: /helloservice/getnotes
+      body: "*"

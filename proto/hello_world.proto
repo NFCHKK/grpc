@@ -8,6 +8,8 @@ package http_grpc;
 
 service HelloService {
   rpc SayHello (HelloRequest) returns (HelloReply) {}
+  rpc SaveNotes(SaveNotesRequest) returns (SaveNotesResponse) {}
+  rpc GetNotes(GetNotesRequest) returns (GetNotesResponse) {}
 }
 
 message HelloRequest {
@@ -16,4 +18,30 @@ message HelloRequest {
 
 message HelloReply {
   string message = 1;
+}
+
+message ReqHead {
+  string id = 1;
+}
+message RspHead {
+  int32 code = 1;
+  string msg = 2;
+}
+
+message SaveNotesRequest {
+  ReqHead head = 1;
+  string notes = 2;
+}
+
+message SaveNotesResponse {
+  RspHead head = 2;
+}
+
+message GetNotesRequest {
+  ReqHead head = 1;
+}
+
+message GetNotesResponse {
+  RspHead Head = 1;
+  string notes = 2;
 }

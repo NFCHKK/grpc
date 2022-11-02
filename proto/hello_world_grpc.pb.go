@@ -23,6 +23,8 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type HelloServiceClient interface {
 	SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
+	SaveNotes(ctx context.Context, in *SaveNotesRequest, opts ...grpc.CallOption) (*SaveNotesResponse, error)
+	GetNotes(ctx context.Context, in *GetNotesRequest, opts ...grpc.CallOption) (*GetNotesResponse, error)
 }
 
 type helloServiceClient struct {
@@ -42,11 +44,31 @@ func (c *helloServiceClient) SayHello(ctx context.Context, in *HelloRequest, opt
 	return out, nil
 }
 
+func (c *helloServiceClient) SaveNotes(ctx context.Context, in *SaveNotesRequest, opts ...grpc.CallOption) (*SaveNotesResponse, error) {
+	out := new(SaveNotesResponse)
+	err := c.cc.Invoke(ctx, "/http_grpc.HelloService/SaveNotes", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *helloServiceClient) GetNotes(ctx context.Context, in *GetNotesRequest, opts ...grpc.CallOption) (*GetNotesResponse, error) {
+	out := new(GetNotesResponse)
+	err := c.cc.Invoke(ctx, "/http_grpc.HelloService/GetNotes", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // HelloServiceServer is the server API for HelloService service.
 // All implementations must embed UnimplementedHelloServiceServer
 // for forward compatibility
 type HelloServiceServer interface {
 	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
+	SaveNotes(context.Context, *SaveNotesRequest) (*SaveNotesResponse, error)
+	GetNotes(context.Context, *GetNotesRequest) (*GetNotesResponse, error)
 	mustEmbedUnimplementedHelloServiceServer()
 }
 
@@ -56,6 +78,12 @@ type UnimplementedHelloServiceServer struct {
 
 func (UnimplementedHelloServiceServer) SayHello(context.Context, *HelloRequest) (*HelloReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SayHello not implemented")
+}
+func (UnimplementedHelloServiceServer) SaveNotes(context.Context, *SaveNotesRequest) (*SaveNotesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SaveNotes not implemented")
+}
+func (UnimplementedHelloServiceServer) GetNotes(context.Context, *GetNotesRequest) (*GetNotesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetNotes not implemented")
 }
 func (UnimplementedHelloServiceServer) mustEmbedUnimplementedHelloServiceServer() {}
 
@@ -88,6 +116,42 @@ func _HelloService_SayHello_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _HelloService_SaveNotes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SaveNotesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(HelloServiceServer).SaveNotes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/http_grpc.HelloService/SaveNotes",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(HelloServiceServer).SaveNotes(ctx, req.(*SaveNotesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _HelloService_GetNotes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetNotesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(HelloServiceServer).GetNotes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/http_grpc.HelloService/GetNotes",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(HelloServiceServer).GetNotes(ctx, req.(*GetNotesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // HelloService_ServiceDesc is the grpc.ServiceDesc for HelloService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -98,6 +162,14 @@ var HelloService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SayHello",
 			Handler:    _HelloService_SayHello_Handler,
+		},
+		{
+			MethodName: "SaveNotes",
+			Handler:    _HelloService_SaveNotes_Handler,
+		},
+		{
+			MethodName: "GetNotes",
+			Handler:    _HelloService_GetNotes_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

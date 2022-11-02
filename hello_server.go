@@ -27,7 +27,7 @@ type server struct {
 
 // for test
 
-// curl -X POST -k http://localhost:8081/example/echo -d '{"name": " hello"}'
+// curl -X POST -k http://localhost:8081/helloservice/sayhello -d '{"name": " hello"}'
 func run() error {
 	// Start a http server and a rpc client
 	// use rpc client connect to rpc server
