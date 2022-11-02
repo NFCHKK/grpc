@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/NFCHKK/grpc/db"
 	. "github.com/NFCHKK/grpc/proto"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
@@ -48,6 +49,9 @@ func run() error {
 }
 
 func main() {
+	if err := initAll(); err != nil {
+		log.Fatalf("failed to init: %v", err)
+	}
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", 9091))
 	if err != nil {
@@ -69,5 +73,9 @@ func main() {
 }
 
 func initAll() error {
-
+	err := db.InitRedis()
+	if err != nil {
+		return fmt.Errorf("InitRedis error > %s", err.Error())
+	}
+	return nil
 }

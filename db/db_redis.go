@@ -11,7 +11,7 @@ var (
 	redisdb *redis.Client
 )
 
-func initRedis() (err error) {
+func InitRedis() (err error) {
 	redisdb = redis.NewClient(
 		&redis.Options{
 			Addr:     "127.0.0.1:6379",
@@ -22,7 +22,7 @@ func initRedis() (err error) {
 	return
 }
 
-func saveNotes(key string, value string) error {
+func SaveNotes(key string, value string) error {
 	res, err := redisdb.Set(key, value, time.Minute*10).Result()
 	if err != nil {
 		return fmt.Errorf("save error, %s, %s", err.Error(), res)
@@ -30,6 +30,6 @@ func saveNotes(key string, value string) error {
 	return nil
 }
 
-func getNotes(key string) (string, error) {
+func GetNotes(key string) (string, error) {
 	return redisdb.Get(key).Result()
 }
