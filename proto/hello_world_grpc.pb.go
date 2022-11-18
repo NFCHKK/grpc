@@ -25,6 +25,7 @@ type HelloServiceClient interface {
 	SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
 	SaveNotes(ctx context.Context, in *SaveNotesRequest, opts ...grpc.CallOption) (*SaveNotesResponse, error)
 	GetNotes(ctx context.Context, in *GetNotesRequest, opts ...grpc.CallOption) (*GetNotesResponse, error)
+	MiniAuth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 }
 
 type helloServiceClient struct {
@@ -62,6 +63,15 @@ func (c *helloServiceClient) GetNotes(ctx context.Context, in *GetNotesRequest, 
 	return out, nil
 }
 
+func (c *helloServiceClient) MiniAuth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error) {
+	out := new(AuthResponse)
+	err := c.cc.Invoke(ctx, "/http_grpc.HelloService/MiniAuth", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // HelloServiceServer is the server API for HelloService service.
 // All implementations must embed UnimplementedHelloServiceServer
 // for forward compatibility
@@ -69,6 +79,7 @@ type HelloServiceServer interface {
 	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
 	SaveNotes(context.Context, *SaveNotesRequest) (*SaveNotesResponse, error)
 	GetNotes(context.Context, *GetNotesRequest) (*GetNotesResponse, error)
+	MiniAuth(context.Context, *AuthRequest) (*AuthResponse, error)
 	mustEmbedUnimplementedHelloServiceServer()
 }
 
@@ -84,6 +95,9 @@ func (UnimplementedHelloServiceServer) SaveNotes(context.Context, *SaveNotesRequ
 }
 func (UnimplementedHelloServiceServer) GetNotes(context.Context, *GetNotesRequest) (*GetNotesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetNotes not implemented")
+}
+func (UnimplementedHelloServiceServer) MiniAuth(context.Context, *AuthRequest) (*AuthResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MiniAuth not implemented")
 }
 func (UnimplementedHelloServiceServer) mustEmbedUnimplementedHelloServiceServer() {}
 
@@ -152,6 +166,24 @@ func _HelloService_GetNotes_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _HelloService_MiniAuth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AuthRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(HelloServiceServer).MiniAuth(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/http_grpc.HelloService/MiniAuth",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(HelloServiceServer).MiniAuth(ctx, req.(*AuthRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // HelloService_ServiceDesc is the grpc.ServiceDesc for HelloService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -170,6 +202,10 @@ var HelloService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetNotes",
 			Handler:    _HelloService_GetNotes_Handler,
+		},
+		{
+			MethodName: "MiniAuth",
+			Handler:    _HelloService_MiniAuth_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

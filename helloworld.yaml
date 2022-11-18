@@ -12,3 +12,6 @@ http:
     - selector: http_grpc.HelloService.GetNotes
       post: /helloservice/getnotes
       body: "*"
+    - selector: http_grpc.HelloService.MiniAuth
+      post: /helloservice/miniauth
+      body: "*"

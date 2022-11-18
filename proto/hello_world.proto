@@ -10,6 +10,7 @@ service HelloService {
   rpc SayHello (HelloRequest) returns (HelloReply) {}
   rpc SaveNotes(SaveNotesRequest) returns (SaveNotesResponse) {}
   rpc GetNotes(GetNotesRequest) returns (GetNotesResponse) {}
+  rpc MiniAuth(AuthRequest) returns (AuthResponse){}
 }
 
 message HelloRequest {
@@ -26,6 +27,15 @@ message ReqHead {
 message RspHead {
   int32 code = 1;
   string msg = 2;
+}
+
+message AuthRequest {
+  string code = 1;
+}
+
+message AuthResponse {
+  RspHead head = 1;
+  string login_code = 2;
 }
 
 message SaveNotesRequest {
