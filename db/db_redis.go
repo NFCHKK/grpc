@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/go-redis/redis"
 	_ "github.com/go-redis/redis"
-	"time"
 )
 
 var (
@@ -23,7 +22,7 @@ func InitRedis() (err error) {
 }
 
 func SaveNotes(key string, value string) error {
-	res, err := redisdb.Set(key, value, time.Minute*10).Result()
+	res, err := redisdb.Set(key, value, 0).Result()
 	if err != nil {
 		return fmt.Errorf("save error, %s, %s", err.Error(), res)
 	}
