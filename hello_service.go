@@ -85,7 +85,7 @@ func (s *server) GetNotes(ctx context.Context, in *pb.GetNotesRequest) (out *pb.
 }
 
 // appid:  wxd66e46d6f6ceae2c
-// secret: 531b107bf0f577f888456b849d9bf2ec
+// secret: 
 // https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=JSCODE&grant_type=authorization_code
 func (s *server) MiniAuth(ctx context.Context, in *pb.AuthRequest) (out *pb.AuthResponse, err error) {
 	log.Printf("Received: %+v", *in)
